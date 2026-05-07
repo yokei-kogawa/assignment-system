@@ -4,8 +4,7 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -23,7 +22,7 @@ enum OrderStatus {
 }
 
 model User {
-  id BigInt @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   employeeCode String @unique
 
@@ -52,7 +51,7 @@ model User {
 }
 
 model Customer {
-  id BigInt @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   customerCode String @unique
 
@@ -70,7 +69,7 @@ model Customer {
 }
 
 model SalesGroup {
-  id BigInt @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   groupCode String @unique
 
@@ -90,14 +89,14 @@ model SalesGroup {
 }
 
 model Order {
-  id BigInt @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   orderNumber String @unique
 
-  customerId BigInt
+  customerId Int
   customer   Customer @relation(fields: [customerId], references: [id])
 
-  assignedSalesGroupId BigInt?
+  assignedSalesGroupId Int?
   assignedSalesGroup   SalesGroup? @relation(fields: [assignedSalesGroupId], references: [id])
 
   status OrderStatus
@@ -106,8 +105,8 @@ model Order {
 
   notes String?
 
-  createdById BigInt
-  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdById Int
+  createdBy   User @relation(fields: [createdById], references: [id])
 
   isActive Boolean @default(true)
 
@@ -128,18 +127,18 @@ enum AssignmentType {
 }
 
 model OrderAssignment {
-  id BigInt @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  orderId BigInt
-  order   Order  @relation(fields: [orderId], references: [id])
+  orderId Int
+  order   Order @relation(fields: [orderId], references: [id])
 
-  userId BigInt
-  user   User   @relation("AssignedUser", fields: [userId], references: [id])
+  userId Int
+  user   User @relation("AssignedUser", fields: [userId], references: [id])
 
   assignmentType AssignmentType
 
-  assignedById BigInt?
-  assignedBy   User?   @relation("AssignmentCreator", fields: [assignedById], references: [id])
+  assignedById Int?
+  assignedBy   User? @relation("AssignmentCreator", fields: [assignedById], references: [id])
 
   assignedAt DateTime
 
@@ -149,13 +148,13 @@ model OrderAssignment {
 }
 
 model SalesGroupMember {
-  id BigInt @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  salesGroupId BigInt
+  salesGroupId Int
   salesGroup   SalesGroup @relation(fields: [salesGroupId], references: [id])
 
-  userId BigInt
-  user   User   @relation(fields: [userId], references: [id])
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 
   role String
 
@@ -167,9 +166,9 @@ model SalesGroupMember {
 }
 
 model AssignmentRule {
-  id BigInt @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  salesGroupId BigInt
+  salesGroupId Int
   salesGroup   SalesGroup @relation(fields: [salesGroupId], references: [id])
 
   priority Int
@@ -184,9 +183,9 @@ model AssignmentRule {
 }
 
 model AssignmentRuleCondition {
-  id BigInt @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  assignmentRuleId BigInt
+  assignmentRuleId Int
   assignmentRule   AssignmentRule @relation(fields: [assignmentRuleId], references: [id])
 
   fieldName String
@@ -207,15 +206,15 @@ model AssignmentRuleCondition {
 }
 
 model OrderHistory {
-  id BigInt @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  orderId BigInt
-  order   Order  @relation(fields: [orderId], references: [id])
+  orderId Int
+  order   Order @relation(fields: [orderId], references: [id])
 
   actionType String
 
-  changedById BigInt
-  changedBy   User   @relation(fields: [changedById], references: [id])
+  changedById Int
+  changedBy   User @relation(fields: [changedById], references: [id])
 
   beforeData Json?
 
@@ -225,35 +224,35 @@ model OrderHistory {
 }
 
 model AssignmentHistory {
-  id BigInt @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  orderId BigInt
-  order   Order  @relation(fields: [orderId], references: [id])
+  orderId Int
+  order   Order @relation(fields: [orderId], references: [id])
 
-  previousUserId BigInt?
-  previousUser   User?   @relation("PreviousAssignedUser", fields: [previousUserId], references: [id])
+  previousUserId Int?
+  previousUser   User? @relation("PreviousAssignedUser", fields: [previousUserId], references: [id])
 
-  newUserId BigInt
-  newUser   User   @relation("NewAssignedUser", fields: [newUserId], references: [id])
+  newUserId Int
+  newUser   User @relation("NewAssignedUser", fields: [newUserId], references: [id])
 
   changeType String
 
-  changedById BigInt
-  changedBy   User   @relation("AssignmentChangedBy", fields: [changedById], references: [id])
+  changedById Int
+  changedBy   User @relation("AssignmentChangedBy", fields: [changedById], references: [id])
 
   createdAt DateTime
 }
 
 model Discussion {
-  id BigInt @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  orderId BigInt
-  order   Order  @relation(fields: [orderId], references: [id])
+  orderId Int
+  order   Order @relation(fields: [orderId], references: [id])
 
   title String
 
-  createdById BigInt
-  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdById Int
+  createdBy   User @relation(fields: [createdById], references: [id])
 
   isActive Boolean @default(true)
 
@@ -263,13 +262,13 @@ model Discussion {
 }
 
 model DiscussionMessage {
-  id BigInt @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  discussionId BigInt
+  discussionId Int
   discussion   Discussion @relation(fields: [discussionId], references: [id])
 
-  userId BigInt
-  user   User   @relation(fields: [userId], references: [id])
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 
   message String
 

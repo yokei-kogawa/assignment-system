@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" BIGINT NOT NULL PRIMARY KEY,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "employeeCode" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Customer" (
-    "id" BIGINT NOT NULL PRIMARY KEY,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "customerCode" TEXT NOT NULL,
     "companyName" TEXT NOT NULL,
     "country" TEXT NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE "Customer" (
 
 -- CreateTable
 CREATE TABLE "SalesGroup" (
-    "id" BIGINT NOT NULL PRIMARY KEY,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "groupCode" TEXT NOT NULL,
     "groupName" TEXT NOT NULL,
     "description" TEXT,
@@ -34,14 +34,14 @@ CREATE TABLE "SalesGroup" (
 
 -- CreateTable
 CREATE TABLE "Order" (
-    "id" BIGINT NOT NULL PRIMARY KEY,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "orderNumber" TEXT NOT NULL,
-    "customerId" BIGINT NOT NULL,
-    "assignedSalesGroupId" BIGINT,
+    "customerId" INTEGER NOT NULL,
+    "assignedSalesGroupId" INTEGER,
     "status" TEXT NOT NULL,
     "orderTitle" TEXT NOT NULL,
     "notes" TEXT,
-    "createdById" BIGINT NOT NULL,
+    "createdById" INTEGER NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" DATETIME NOT NULL,
     "updatedAt" DATETIME NOT NULL,
@@ -52,11 +52,11 @@ CREATE TABLE "Order" (
 
 -- CreateTable
 CREATE TABLE "OrderAssignment" (
-    "id" BIGINT NOT NULL PRIMARY KEY,
-    "orderId" BIGINT NOT NULL,
-    "userId" BIGINT NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "orderId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
     "assignmentType" TEXT NOT NULL,
-    "assignedById" BIGINT,
+    "assignedById" INTEGER,
     "assignedAt" DATETIME NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     CONSTRAINT "OrderAssignment_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -66,9 +66,9 @@ CREATE TABLE "OrderAssignment" (
 
 -- CreateTable
 CREATE TABLE "SalesGroupMember" (
-    "id" BIGINT NOT NULL PRIMARY KEY,
-    "salesGroupId" BIGINT NOT NULL,
-    "userId" BIGINT NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "salesGroupId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
     "role" TEXT NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" DATETIME NOT NULL,
@@ -78,8 +78,8 @@ CREATE TABLE "SalesGroupMember" (
 
 -- CreateTable
 CREATE TABLE "AssignmentRule" (
-    "id" BIGINT NOT NULL PRIMARY KEY,
-    "salesGroupId" BIGINT NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "salesGroupId" INTEGER NOT NULL,
     "priority" INTEGER NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" DATETIME NOT NULL,
@@ -89,8 +89,8 @@ CREATE TABLE "AssignmentRule" (
 
 -- CreateTable
 CREATE TABLE "AssignmentRuleCondition" (
-    "id" BIGINT NOT NULL PRIMARY KEY,
-    "assignmentRuleId" BIGINT NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "assignmentRuleId" INTEGER NOT NULL,
     "fieldName" TEXT NOT NULL,
     "expectedValue" TEXT NOT NULL,
     "priority" INTEGER NOT NULL,
@@ -103,10 +103,10 @@ CREATE TABLE "AssignmentRuleCondition" (
 
 -- CreateTable
 CREATE TABLE "OrderHistory" (
-    "id" BIGINT NOT NULL PRIMARY KEY,
-    "orderId" BIGINT NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "orderId" INTEGER NOT NULL,
     "actionType" TEXT NOT NULL,
-    "changedById" BIGINT NOT NULL,
+    "changedById" INTEGER NOT NULL,
     "beforeData" JSONB,
     "afterData" JSONB,
     "createdAt" DATETIME NOT NULL,
@@ -116,12 +116,12 @@ CREATE TABLE "OrderHistory" (
 
 -- CreateTable
 CREATE TABLE "AssignmentHistory" (
-    "id" BIGINT NOT NULL PRIMARY KEY,
-    "orderId" BIGINT NOT NULL,
-    "previousUserId" BIGINT,
-    "newUserId" BIGINT NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "orderId" INTEGER NOT NULL,
+    "previousUserId" INTEGER,
+    "newUserId" INTEGER NOT NULL,
     "changeType" TEXT NOT NULL,
-    "changedById" BIGINT NOT NULL,
+    "changedById" INTEGER NOT NULL,
     "createdAt" DATETIME NOT NULL,
     CONSTRAINT "AssignmentHistory_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT "AssignmentHistory_previousUserId_fkey" FOREIGN KEY ("previousUserId") REFERENCES "User" ("id") ON DELETE SET NULL ON UPDATE CASCADE,
@@ -131,10 +131,10 @@ CREATE TABLE "AssignmentHistory" (
 
 -- CreateTable
 CREATE TABLE "Discussion" (
-    "id" BIGINT NOT NULL PRIMARY KEY,
-    "orderId" BIGINT NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "orderId" INTEGER NOT NULL,
     "title" TEXT NOT NULL,
-    "createdById" BIGINT NOT NULL,
+    "createdById" INTEGER NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" DATETIME NOT NULL,
     CONSTRAINT "Discussion_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
@@ -143,9 +143,9 @@ CREATE TABLE "Discussion" (
 
 -- CreateTable
 CREATE TABLE "DiscussionMessage" (
-    "id" BIGINT NOT NULL PRIMARY KEY,
-    "discussionId" BIGINT NOT NULL,
-    "userId" BIGINT NOT NULL,
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "discussionId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
     "message" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL,
     "updatedAt" DATETIME NOT NULL,
