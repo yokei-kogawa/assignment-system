@@ -19,3 +19,39 @@ export async function GET() {
     );
   }
 }
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+
+    const {
+      orderNumber,
+      customerId,
+      createdById,
+      orderTitle,
+      notes,
+    } = body;
+
+    const order = await prisma.order.create({
+      data: {
+        orderNumber,
+        customerId,
+        createdById,
+        orderTitle,
+        notes,
+        status: "pending_assignment",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
+
+    return NextResponse.json(order, { status: 201 });
+  } catch (error) {
+    console.error(error);
+
+    return NextResponse.json(
+      { error: "Failed to create order" },
+      { status: 500 }
+    );
+  }
+}
