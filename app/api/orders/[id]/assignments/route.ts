@@ -33,6 +33,17 @@ export async function POST(
       },
     });
 
+    await prisma.assignmentHistory.create({
+      data: {
+        orderId: Number(id),
+        previousUserId: null,
+        newUserId: userId,
+        changeType: "assigned",
+        changedById: assignedById,
+        createdAt: new Date(),
+      },
+    });
+
     await prisma.order.update({
       where: {
         id: Number(id),

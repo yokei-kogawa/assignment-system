@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { assignSalesGroup } from "@/lib/assignment";
 
 export async function GET() {
   try {
@@ -32,14 +33,21 @@ export async function POST(request: Request) {
       notes,
     } = body;
 
+    const salesGroup =
+      await assignSalesGroup(customerId);
+
     const order = await prisma.order.create({
       data: {
         orderNumber,
         customerId,
-        createdById,
+        assignedSalesGroupId: salesGroup?.id,
+        status: salesGroup
+            ? "assigned"
+            : "pending_assignment",
         orderTitle,
         notes,
-        status: "pending_assignment",
+        createdById,
+        isActive: true,
         createdAt: new Date(),
         updatedAt: new Date(),
       },

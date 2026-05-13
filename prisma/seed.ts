@@ -34,6 +34,55 @@ async function main() {
     },
   });
 
+  await prisma.salesGroup.upsert({
+    where: {
+      groupCode: "JP_SALES",
+    },
+    update: {},
+    create: {
+      groupCode: "JP_SALES",
+      groupName: "Japan Sales",
+      description: "Japan sales group",
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  });
+
+await prisma.assignmentRule.upsert({
+  where: {
+    id: 1,
+  },
+  update: {},
+  create: {
+    salesGroupId: 1,
+    priority: 1,
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+});
+
+await prisma.assignmentRuleCondition.upsert({
+  where: {
+    assignmentRuleId_fieldName: {
+      assignmentRuleId: 1,
+      fieldName: "country",
+    },
+  },
+  update: {},
+  create: {
+    assignmentRuleId: 1,
+    fieldName: "country",
+    expectedValue: "Japan",
+    priority: 1,
+    isEnabled: true,
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+});
+
   console.log("Seed completed");
 }
 
