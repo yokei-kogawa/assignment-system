@@ -100,6 +100,26 @@ await prisma.salesGroupMember.upsert({
   },
 });
 
+await prisma.assignmentRuleCondition.upsert({
+  where: {
+    assignmentRuleId_fieldName: {
+      assignmentRuleId: 1,
+      fieldName: "customerCode",
+    },
+  },
+  update: {},
+  create: {
+    assignmentRuleId: 1,
+    fieldName: "customerCode",
+    expectedValue: "C001",
+    priority: 2,
+    isEnabled: true,
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+});
+
   console.log("Seed completed");
 }
 
