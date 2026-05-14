@@ -36,3 +36,24 @@ export async function assignSalesGroup(
 
   return condition.assignmentRule.salesGroup;
 }
+
+export async function assignUser(
+  salesGroupId: number
+) {
+  const member =
+    await prisma.salesGroupMember.findFirst({
+      where: {
+        salesGroupId,
+        isActive: true,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+  if (!member) {
+    return null;
+  }
+
+  return member.user;
+}

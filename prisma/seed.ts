@@ -83,6 +83,23 @@ await prisma.assignmentRuleCondition.upsert({
   },
 });
 
+await prisma.salesGroupMember.upsert({
+  where: {
+    salesGroupId_userId: {
+      salesGroupId: 1,
+      userId: 1,
+    },
+  },
+  update: {},
+  create: {
+    salesGroupId: 1,
+    userId: 1,
+    role: "leader",
+    isActive: true,
+    createdAt: new Date(),
+  },
+});
+
   console.log("Seed completed");
 }
 
