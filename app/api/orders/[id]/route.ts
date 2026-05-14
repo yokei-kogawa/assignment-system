@@ -23,6 +23,8 @@ export async function GET(
         assignedSalesGroup: true,
         createdBy: true,
         assignments: true,
+        histories: true,
+        assignmentHistories: true
       },
     });
 
@@ -44,40 +46,3 @@ export async function GET(
   }
 }
 
-export async function PATCH(
-  request: Request,
-  { params }: Params
-) {
-  try {
-    const { id } = await params;
-
-    const body = await request.json();
-
-    const {
-      status,
-      orderTitle,
-      notes,
-    } = body;
-
-    const order = await prisma.order.update({
-      where: {
-        id: Number(id),
-      },
-      data: {
-        status,
-        orderTitle,
-        notes,
-        updatedAt: new Date(),
-      },
-    });
-
-    return NextResponse.json(order);
-  } catch (error) {
-    console.error(error);
-
-    return NextResponse.json(
-      { error: "Failed to update order" },
-      { status: 500 }
-    );
-  }
-}

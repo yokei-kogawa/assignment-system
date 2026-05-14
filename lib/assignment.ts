@@ -13,28 +13,60 @@ export async function assignSalesGroup(
     return null;
   }
 
-  const condition =
-    await prisma.assignmentRuleCondition.findFirst({
+  const rules =
+    await prisma.assignmentRule.findMany({
       where: {
-        fieldName: "country",
-        expectedValue: customer.country,
-        isEnabled: true,
         isActive: true,
       },
       include: {
-        assignmentRule: {
-          include: {
-            salesGroup: true,
+        salesGroup: true,
+        conditions: {
+          where: {
+            isEnabled: true,
+            isActive: true,
           },
         },
       },
+      orderBy: {
+        priority: "asc",
+      },
     });
 
-  if (!condition) {
-    return null;
+  for (const rule of rules) {
+    const matched = rule.conditions.every(
+    // TODO:
+    // 現在は field ごとにハードコード。
+    // 将来的に動的判定へ置き換え予定。
+      (condition) => {
+        if (
+          condition.fieldName === "country"
+        ) {
+          return (
+            customer.country ===
+            condition.expectedValue
+          );
+        }
+
+        if (
+          condition.fieldName ===
+          "customerCode"
+        ) {
+          return (
+            customer.customerCode ===
+            condition.expectedValue
+          );
+        }
+
+        return false;
+      }
+    );
+
+    if (matched) {
+      return rule.salesGroup;
+    }
   }
 
-  return condition.assignmentRule.salesGroup;
+  return null;
 }
 
 export async function assignUser(
