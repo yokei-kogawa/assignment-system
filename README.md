@@ -96,10 +96,11 @@
 
 ## Main Features
 
-* 受注登録
-* 営業グループ振り分け
-* 担当者アサイン
-* 条件ルール管理
+* 受注登録 API
+* ルールベース営業グループ振り分け
+* 自動担当者アサイン
+* 担当者再割当
+* ステータス更新
 * 履歴管理
 * ディスカッション機能
 
@@ -107,7 +108,7 @@
 
 ## Tech Stack
 
-* Next.js — Frontend / Backend
+* Next.js App Router — API / Frontend
 * TypeScript — Type Safety
 * Prisma — ORM / Migration
 * SQLite — Local Development Database
@@ -179,19 +180,31 @@
 * relation設計
 * unique制約整理
 * Prisma Studio確認
+* API実装
+* 自動営業グループ振り分け
+* 自動担当者アサイン
+* ステータス更新
+* 担当者再割当
+* ディスカッション機能
+* 履歴管理
+* transaction対応
 
 ### In Progress
 
-* API設計
-* 自動振り分けロジック
+* バリデーション強化
+* API拡張
+* 振り分け条件ロジック改善
+* UI設計
 
 ### Planned
 
 * 認証機能
 * UI実装
-* PostgreSQL対応
-* 権限制御
+* バリデーション
 * 通知機能
+* 権限制御
+* PostgreSQL対応
+* APIテスト強化
 
 ---
 
