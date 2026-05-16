@@ -120,6 +120,22 @@ await prisma.assignmentRuleCondition.upsert({
   },
 });
 
+await prisma.user.upsert({
+  where: {
+    email: "suzuki@example.com",
+  },
+  update: {},
+  create: {
+    employeeCode: "U002",
+    name: "Suzuki",
+    email: "suzuki@example.com",
+    role: "sales",
+    isActive: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+});
+
   console.log("Seed completed");
 }
 
