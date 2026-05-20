@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import {
+  updateOrderStatusSchema
+} from "@/lib/validations/order";
+import {
+  updateOrderStatus,
+} from "@/lib/services/order-service";
 
 type Params = {
   params: Promise<{
@@ -58,6 +64,24 @@ export async function PATCH(
 
     const body = await request.json();
 
+    const parsed =
+      updateOrderStatusSchema.safeParse(
+        body
+      );
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        {
+          error: "Invalid input",
+          details:
+            parsed.error.flatten(),
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
     const {
       status,
       changedById,
@@ -82,40 +106,11 @@ export async function PATCH(
     }
 
     const result =
-      await prisma.$transaction(
-        async (tx) => {
-          const updatedOrder =
-            await tx.order.update({
-              where: {
-                id: Number(id),
-              },
-              data: {
-                status,
-                updatedAt: new Date(),
-              },
-            });
-
-          await tx.orderHistory.create({
-            data: {
-              orderId: updatedOrder.id,
-              actionType:
-                "status_updated",
-              changedById,
-              beforeData: {
-                status:
-                  existingOrder.status,
-              },
-              afterData: {
-                status:
-                  updatedOrder.status,
-              },
-              createdAt: new Date(),
-            },
-          });
-
-          return updatedOrder;
-        }
-      );
+        await updateOrderStatus({
+            orderId: Number(id),
+            status,
+            changedById,
+        });
 
     return NextResponse.json(
       result

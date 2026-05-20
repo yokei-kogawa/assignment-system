@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 
 import { prisma } from "@/lib/prisma";
+import {
+  reassignOrderSchema,
+} from "@/lib/validations/order";
+import {
+  reassignOrder,
+} from "@/lib/services/order-service";
+
 
 export async function PATCH(
   request: Request,
@@ -13,71 +20,35 @@ export async function PATCH(
 
     const body = await request.json();
 
-    const {
-      newUserId,
-      changedById,
-    } = body;
+    const parsed =
+      reassignOrderSchema.safeParse(
+        body
+      );
 
-    const currentAssignment =
-      await prisma.orderAssignment.findFirst({
-        where: {
-          orderId: Number(id),
-          isActive: true,
-        },
-      });
-
-    if (!currentAssignment) {
+    if (!parsed.success) {
       return NextResponse.json(
         {
-          error:
-            "Active assignment not found",
+          error: "Invalid input",
+          details:
+            parsed.error.flatten(),
         },
         {
-          status: 404,
+          status: 400,
         }
       );
     }
 
+    const {
+      newUserId,
+      changedById,
+    } = parsed.data;
+
     const result =
-      await prisma.$transaction(
-        async (tx) => {
-          await tx.orderAssignment.update({
-            where: {
-              id: currentAssignment.id,
-            },
-            data: {
-              isActive: false,
-            },
-          });
-
-          const newAssignment =
-            await tx.orderAssignment.create({
-              data: {
-                orderId: Number(id),
-                userId: newUserId,
-                assignmentType: "primary",
-                assignedById: changedById,
-                assignedAt: new Date(),
-                isActive: true,
-              },
-            });
-
-          await tx.assignmentHistory.create({
-            data: {
-              orderId: Number(id),
-              previousUserId:
-                currentAssignment.userId,
-              newUserId,
-              changeType:
-                "manual_reassigned",
-              changedById,
-              createdAt: new Date(),
-            },
-          });
-
-          return newAssignment;
-        }
-      );
+      await reassignOrder({
+        orderId: Number(id),
+        newUserId,
+        changedById,
+      });
 
     return NextResponse.json(
       result
