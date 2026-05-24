@@ -87,24 +87,6 @@ export async function PATCH(
       changedById,
     } = body;
 
-    const existingOrder =
-      await prisma.order.findUnique({
-        where: {
-          id: Number(id),
-        },
-      });
-
-    if (!existingOrder) {
-      return NextResponse.json(
-        {
-          error: "Order not found",
-        },
-        {
-          status: 404,
-        }
-      );
-    }
-
     const result =
         await updateOrderStatus({
             orderId: Number(id),
@@ -117,6 +99,21 @@ export async function PATCH(
     );
   } catch (error) {
     console.error(error);
+
+    if (
+        error instanceof Error &&
+        error.message ===
+        "Order not found"
+    ) {
+        return NextResponse.json(
+        {
+            error: "Order not found",
+        },
+        {
+            status: 404,
+        }
+        );
+    }
 
     return NextResponse.json(
       {
