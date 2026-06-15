@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 
-import { prisma } from "@/lib/prisma";
 import {
   reassignOrderSchema,
 } from "@/lib/validations/order";
 import {
   reassignOrder,
-} from "@/lib/services/order-service";
+} from "@/lib/services/order-assignment-service";
 
 
 export async function PATCH(

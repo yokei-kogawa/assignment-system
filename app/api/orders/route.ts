@@ -10,7 +10,7 @@ import {
 } from "@/lib/validations/order";
 import {
   createOrder,
-} from "@/lib/services/order-service";
+} from "@/lib/services/order-create-service";
 
 export async function GET() {
   try {
@@ -53,7 +53,19 @@ export async function POST(request: Request) {
     const result =
         await createOrder(parsed.data);
 
-    return NextResponse.json(result, { status: 201 });
+console.log("result =", result);
+
+if (!result) {
+  throw new Error(
+    "createOrder returned undefined"
+  );
+}
+
+return NextResponse.json(
+  result,
+  { status: 201 }
+);
+
   } catch (error) {
     console.error(error);
 

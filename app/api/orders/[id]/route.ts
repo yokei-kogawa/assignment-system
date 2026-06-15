@@ -6,7 +6,7 @@ import {
 } from "@/lib/validations/order";
 import {
   updateOrderStatus,
-} from "@/lib/services/order-service";
+} from "@/lib/services/order-status-service";
 
 type Params = {
   params: Promise<{
